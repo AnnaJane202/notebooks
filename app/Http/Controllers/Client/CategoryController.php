@@ -30,8 +30,9 @@ class CategoryController extends Controller
         $params = ParamService::indexByCategories($category);
         $category = CategoryResource::make($category)->resolve();
         $params = ParamWithValuesResource::collection($params)->resolve();
+        $categories = CategoryResource::collection(Category::all())->resolve();
         $ct = session()->get('counter');
 
-        return inertia('Client/Category/ProductIndex', compact( 'params','products', 'category', 'ct'));
+        return inertia('Client/Category/ProductIndex', compact( 'params','products', 'category', 'ct', 'categories'));
     }
 }

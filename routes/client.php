@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::name('client.')->group(function(){
     Route::get('products', [\App\Http\Controllers\Client\ProductController::class, 'index'])->name('products.index');
+    Route::get('/', [\App\Http\Controllers\Client\ProductController::class, 'index'])->name('products.index');
     Route::get('products/{product}', [\App\Http\Controllers\Client\ProductController::class, 'show'])->name('products.show');
     Route::get('categories/{category}/products', [\App\Http\Controllers\Client\CategoryController::class, 'productIndex'])->name('categories.products.index');
 
