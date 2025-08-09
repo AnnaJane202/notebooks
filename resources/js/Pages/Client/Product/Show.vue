@@ -3,6 +3,8 @@
 import {Link} from "@inertiajs/vue3";
 import MainLayout from "@/Layouts/MainLayout.vue";
 import StoreOrUpdateCart from "@/Components/Client/Cart/StoreOrUpdateCart.vue";
+import {Head} from "@inertiajs/vue3";
+
 
 // import StoreOrUpdateCart from "@/Components/Client/Cart/StoreOrUpdateCart.vue";
 
@@ -24,14 +26,246 @@ export default {
 
     components: {
         Link,
-        StoreOrUpdateCart
+        StoreOrUpdateCart,
+        Head,
     }
 }
 
 </script>
 
 <template>
-    <article class="w-full bg-gray-50 p-4 min-h-screen">
+    <Head>
+        <title>{{ product.title }}</title>
+    </Head>
+
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Первый блок (верхний) -->
+        <div class="flex flex-col lg:flex-row gap-8 mb-12">
+            <!-- Блок с изображениями -->
+            <div class="flex flex-row-reverse md:flex-row gap-4 w-full lg:w-1/2">
+                <!-- Миниатюры (вертикальные) -->
+                <div  class="flex flex-col gap-2 w-16 md:w-20">
+                    <template v-for="image in product.images">
+                    <div @click="selectedImage = image" class="border rounded-md p-1 cursor-pointer hover:border-blue-500">
+                        <img :src="image.url" :alt="product.title" class="cursor-pointer w-full">
+                    </div>
+                    </template>
+
+                </div>
+
+                <!-- Основное изображение -->
+                <div v-if="selectedImage" class="flex-1 bg-white p-4 rounded-lg shadow-sm">
+                    <img :src="selectedImage.url" :alt="product.title" class="w-full h-auto object-contain">
+                </div>
+
+            </div>
+
+            <!-- Блок с основной информацией -->
+            <div class="w-full lg:w-1/2">
+                <h1 class="text-2xl md:text-3xl font-bold mb-4">{{ product.title }}</h1>
+
+                <!-- Основные характеристики -->
+                <div class="mb-6">
+<!--                    <div class="flex items-center gap-2 mb-2">-->
+<!--                        <span class="text-gray-500">Бренд:</span>-->
+<!--                        <span class="font-medium">Example Brand</span>-->
+<!--                    </div>-->
+                    <template v-for="param in product.params">
+                        <div v-if="param.title === 'Диагональ экрана'" class="flex justify-between items-center gap-2 mb-2">
+                            <span class="text-gray-500">Диагональ экрана</span>
+                            <span class="font-medium">{{ param.value }} {{ param.unit }}</span>
+                        </div>
+                        <div v-if="param.title === 'Разрешение экрана'" class="flex justify-between items-center gap-2 mb-2">
+                            <span class="text-gray-500">Разрешение экрана</span>
+                            <span class="font-medium">{{ param.value }}</span>
+                        </div>
+                        <div v-if="param.title === 'Частота обновления экрана'" class="flex justify-between items-center gap-2 mb-2">
+                            <span class="text-gray-500">Частота обновления экрана</span>
+                            <span class="font-medium">{{ param.value }} {{ param.unit }}</span>
+                        </div>
+                        <div v-if="param.title === 'Тип видеокарты'" class="flex justify-between items-center gap-2 mb-2">
+                            <span class="text-gray-500">Тип видеокарты</span>
+                            <span class="font-medium">{{ param.value }}</span>
+                        </div>
+                        <div v-if="param.title === 'Модель видеокарты'" class="flex justify-between items-center gap-2 mb-2">
+                            <span class="text-gray-500">Модель видеокарты</span>
+                            <span class="font-medium">{{ param.value }}</span>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Блок с ценой и кнопкой -->
+                <div class="bg-gray-100 p-6 rounded-lg">
+                    <div class="flex items-center gap-4 mb-4">
+                        <span class="text-3xl font-bold text-gray-800">{{ product.price }} ₽</span>
+                        <span class="text-lg text-gray-500 line-through">{{ product.old_price }} ₽</span>
+<!--                        <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-sm">-16%</span>-->
+                    </div>
+                    <div>
+                        <StoreOrUpdateCart :product="product"></StoreOrUpdateCart>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Второй блок (нижний) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Левая колонка характеристик -->
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-xl font-bold mb-4 pb-2 border-b">Основные характеристики</h2>
+                <div class="space-y-4 mb-8">
+                    <template v-for="param in params['Основные характеристики']">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-gray-500">{{ param.title }}</div>
+                            <div>{{ param.value }}</div>
+                        </div>
+                    </template>
+                </div>
+
+                <h2 class="text-xl font-bold mb-4 pb-2 border-b">Процессор</h2>
+                <div class="space-y-4 mb-8">
+                    <template v-for="param in params['Процессор']">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-gray-500">{{ param.title }}</div>
+                            <div>{{ param.value }}</div>
+                        </div>
+                    </template>
+                </div>
+
+                <h2 class="text-xl font-bold mb-4 pb-2 border-b">Экран</h2>
+                <div class="space-y-4 mb-8">
+                    <template v-for="param in params['Экран']">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-gray-500">{{ param.title }}</div>
+                            <div>{{ param.value }}</div>
+                        </div>
+                    </template>
+                </div>
+
+                <h2 class="text-xl font-bold mb-4 pb-2 border-b">Оперативная память</h2>
+                <div class="space-y-4 mb-8">
+                    <template v-for="param in params['Оперативная память']">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-gray-500">{{ param.title }}</div>
+                            <div>{{ param.value }}</div>
+                        </div>
+                    </template>
+                </div>
+
+                <h2 class="text-xl font-bold mb-4 pb-2 border-b">Видеокарта</h2>
+                <div class="space-y-4 mb-8">
+                    <template v-for="param in params['Видеокарта']">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-gray-500">{{ param.title }}</div>
+                            <div>{{ param.value }}</div>
+                        </div>
+                    </template>
+                </div>
+
+                <h2 class="text-xl font-bold mb-4 pb-2 border-b">Хранение данных</h2>
+                <div class="space-y-4 mb-8">
+                    <template v-for="param in params['Хранение данных']">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-gray-500">{{ param.title }}</div>
+                            <div>{{ param.value }}</div>
+                        </div>
+                    </template>
+                </div>
+
+                <h2 class="text-xl font-bold mb-4 pb-2 border-b">Интерфейсы и коммуникации</h2>
+                <div class="space-y-4 mb-8">
+                    <template v-for="param in params['Интерфейсы и коммуникации']">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-gray-500">{{ param.title }}</div>
+                            <div>{{ param.value }}</div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+
+            <!-- Правая колонка характеристик -->
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-xl font-bold mb-4 pb-2 border-b">Конструкция</h2>
+                <div class="space-y-4 mb-8">
+                    <template v-for="param in params['Конструкция']">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-gray-500">{{ param.title }}</div>
+                            <div>{{ param.value }}</div>
+                        </div>
+                    </template>
+                </div>
+
+                <h2 class="text-xl font-bold mb-4 pb-2 border-b">Камера и звук</h2>
+                <div class="space-y-4 mb-8">
+                    <template v-for="param in params['Камера и звук']">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-gray-500">{{ param.title }}</div>
+                            <div>{{ param.value }}</div>
+                        </div>
+                    </template>
+                </div>
+
+                <h2 class="text-xl font-bold mb-4 pb-2 border-b">Устройства ввода</h2>
+                <div class="space-y-4 mb-8">
+                    <template v-for="param in params['Устройства ввода']">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-gray-500">{{ param.title }}</div>
+                            <div>{{ param.value }}</div>
+                        </div>
+                    </template>
+                </div>
+
+                <h2 class="text-xl font-bold mb-4 pb-2 border-b">Аккумулятор</h2>
+                <div class="space-y-4 mb-8">
+                    <template v-for="param in params['Аккумулятор']">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-gray-500">{{ param.title }}</div>
+                            <div>{{ param.value }}</div>
+                        </div>
+                    </template>
+                </div>
+
+                <h2 class="text-xl font-bold mb-4 pb-2 border-b">Дополнительные функции</h2>
+                <div class="space-y-4 mb-8">
+                    <template v-for="param in params['Дополнительные функции']">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-gray-500">{{ param.title }}</div>
+                            <div>{{ param.value }}</div>
+                        </div>
+                    </template>
+                </div>
+
+                <h2 class="text-xl font-bold mb-4 pb-2 border-b">Комплектация</h2>
+                <div class="space-y-4 mb-8">
+                    <template v-for="param in params['Комплектация']">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-gray-500">{{ param.title }}</div>
+                            <div>{{ param.value }}</div>
+                        </div>
+                    </template>
+                </div>
+
+                <h2 class="text-xl font-bold mb-4 pb-2 border-b">Размеры и вес</h2>
+                <div class="space-y-4 mb-8">
+                    <template v-for="param in params['Размеры и вес']">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-gray-500">{{ param.title }}</div>
+                            <div>{{ param.value }}</div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <article class=" hidden w-full bg-gray-50 p-4 min-h-screen">
         <div class="w-4/5 mx-auto">
             <div class="text-3xl mb-4">
                 <div>{{ product.title }}</div>
